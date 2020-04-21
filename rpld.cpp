@@ -1,10 +1,11 @@
-#include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include <algorithm>
 #include <boost/math/special_functions/zeta.hpp>
 #include <math.h>
 #include <random>
 
 using namespace std;
+using namespace Rcpp;
 
 // The rpld function generates a random descrete power law distribution.
 // Code is based on Colin Gillespie's rpldis function  in the R
@@ -29,12 +30,11 @@ using namespace std;
 // Sys.setenv("PKG_CXXFLAGS"="-std=c++11 -O3 -march=native")
 
 
-// [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::depends(BH)]]
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 
-arma::uvec rpld(   int n,
+NumericVector rpld(    int n,
                    int xmin,
                    double alpha,
                    int discrete_max = 10000,
@@ -45,7 +45,7 @@ arma::uvec rpld(   int n,
 {
 
     // output
-    arma::uvec rng = arma::zeros<arma::uvec>(n);
+    NumericVector rng = NumericVector(n);
 
 
     // set upper limit of uniform dist
@@ -58,14 +58,8 @@ arma::uvec rpld(   int n,
 
 
     // generate n random numbers from uniform distribution
-    arma::vec u(n);
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(0.0, lim);
-    auto generator = std::bind(dis, gen);
-    std::generate_n(u.begin(), n, generator);
-
+    NumericVector u(n);
+    u = Rcpp::runif( n, 0, lim );
 
     // check for low descrete_max
     if( discrete_max > 0.5 ){
@@ -81,10 +75,10 @@ arma::uvec rpld(   int n,
 
 
         // make cumulative distribution function up to discrete_max (CDF)
-        arma::vec x_alpha(discrete_max);
+        NumericVector x_alpha(discrete_max);
         x_alpha[0] = (constant - pow(xmin, -alpha))/constant;
 
-        arma::vec CDF (discrete_max + 1);
+        NumericVector CDF (discrete_max + 1);
         CDF[1] =  1 - (constant -  pow(xmin, -alpha) ) /constant;
 
 
@@ -94,7 +88,6 @@ arma::uvec rpld(   int n,
             CDF[i+1] = 1 - x_alpha[i];
 
         }
-
 
 
         // sort u smallest to largest
@@ -131,6 +124,7 @@ arma::uvec rpld(   int n,
             }
 
         }
+
 
         // from end of rng,  search and replace zeros with continuous power law approximation
         int i = n-1;
