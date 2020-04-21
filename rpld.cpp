@@ -41,8 +41,30 @@ Rcpp::NumericVector rpld(  int n,
                         )
 
 {
+    // check that parameters are in valid range
+    if (xmin < 1) {
+        throw std::range_error("xmin must be greater than or equal to 1");
+    }
 
-    // output
+    if (alpha <= 1) {
+        throw std::range_error("alpha must be greater than 1");
+    }
+
+    if (discrete_max < 1) {
+        throw std::range_error("discrete_max must be greater than or equal to 1");
+    }
+
+
+    if (xmax < 1 & xmax != 0 & xmax > xmin) {
+        throw std::range_error("xmax must be greater than 1");
+    }
+
+    if (xmax <= xmin & xmax != 0) {
+        throw std::range_error("xmax must be greater than xmin");
+    }
+
+
+    // output vector
     Rcpp::NumericVector rng = Rcpp::NumericVector(n);
 
 
