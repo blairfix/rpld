@@ -1,6 +1,6 @@
 # rpld
 
-`rpld` is a discrete power-law random number generator for R, built in RcppArmadillo.
+`rpld` is a discrete power-law random number generator for R, built in Rcpp.
 
 The `rpld` function generates a descrete power law distribution.
 Code is based on Colin Gillespie's `rpldis` function  in the R
@@ -27,7 +27,6 @@ rpld(n = 100, xmin = 1, alpha = 2.3, discrete_max = 100000, ordered = F)
 ### Installation
 To run `rpld`, install the following R packages:
  * [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) 
- * [RcppArmadillo](https://cran.r-project.org/web/packages/RcppArmadillo/index.html) 
  * [BH](https://cran.r-project.org/web/packages/BH/index.html) (Boost header library )
 
 Put the source code (`rpld.cpp`) in the directory of your R script. Then source it with the command `sourceCpp(rpld.cpp)`.

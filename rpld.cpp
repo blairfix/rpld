@@ -4,8 +4,6 @@
 #include <math.h>
 #include <random>
 
-using namespace std;
-using namespace Rcpp;
 
 // The rpld function generates a random descrete power law distribution.
 // Code is based on Colin Gillespie's rpldis function  in the R
@@ -34,31 +32,31 @@ using namespace Rcpp;
 // [[Rcpp::plugins(cpp11)]]
 // [[Rcpp::export]]
 
-NumericVector rpld(    int n,
-                   int xmin,
-                   double alpha,
-                   int discrete_max = 10000,
-                   int xmax = 0,
-                   bool ordered = false
-                   )
+Rcpp::NumericVector rpld(  int n,
+                           int xmin,
+                           double alpha,
+                           int discrete_max = 10000,
+                           int xmax = 0,
+                           bool ordered = false
+                        )
 
 {
 
     // output
-    NumericVector rng = NumericVector(n);
+    Rcpp::NumericVector rng = Rcpp::NumericVector(n);
 
 
     // set upper limit of uniform dist
     double lim;
     if (xmax > xmin){
-        lim =  1 -  pow( ( xmax - 0.5 )/( xmin - 0.5 ), 1 - alpha    ) ;
+        lim =  1 -  std::pow( ( xmax - 0.5 )/( xmin - 0.5 ), 1 - alpha    ) ;
     } else {
         lim = 1.0;
     }
 
 
     // generate n random numbers from uniform distribution
-    NumericVector u(n);
+    Rcpp::NumericVector u(n);
     u = Rcpp::runif( n, 0, lim );
 
     // check for low descrete_max
@@ -69,22 +67,22 @@ NumericVector rpld(    int n,
 
         if (xmin > 1){
             for(int i = 1; i < xmin; i++ ){
-                constant = constant - pow(i, -alpha);
+                constant = constant - std::pow(i, -alpha);
             }
         }
 
 
         // make cumulative distribution function up to discrete_max (CDF)
-        NumericVector x_alpha(discrete_max);
-        x_alpha[0] = (constant - pow(xmin, -alpha))/constant;
+        Rcpp::NumericVector x_alpha(discrete_max);
+        x_alpha[0] = (constant - std::pow(xmin, -alpha))/constant;
 
-        NumericVector CDF (discrete_max + 1);
-        CDF[1] =  1 - (constant -  pow(xmin, -alpha) ) /constant;
+        Rcpp::NumericVector CDF (discrete_max + 1);
+        CDF[1] =  1 - (constant -  std::pow(xmin, -alpha) ) /constant;
 
 
         for(int i = 1; i < discrete_max; i++){
 
-            x_alpha[i] = x_alpha[i-1] -  pow(xmin + i, -alpha)/constant; // cumulative sum
+            x_alpha[i] = x_alpha[i-1] -  std::pow(xmin + i, -alpha)/constant; // cumulative sum
             CDF[i+1] = 1 - x_alpha[i];
 
         }
@@ -129,7 +127,7 @@ NumericVector rpld(    int n,
         // from end of rng,  search and replace zeros with continuous power law approximation
         int i = n-1;
         while(rng[i] == 0){
-            rng[i] = std::floor( (xmin - 0.5) * pow(1 - u[i], -1/(alpha - 1) ) + 0.5);
+            rng[i] = std::floor( (xmin - 0.5) * std::pow(1 - u[i], -1/(alpha - 1) ) + 0.5);
             i--;
         }
 
@@ -144,7 +142,7 @@ NumericVector rpld(    int n,
         //////////////////////////////////////////////////////////////
         // generate rng using rounding method from continuous power law distribution
         for(int i = 0; i <n; i++){
-            rng[i] = std::floor((xmin - 0.5) * pow(1 - u[i], -1/(alpha - 1)) + 0.5);
+            rng[i] = std::floor((xmin - 0.5) * std::pow(1 - u[i], -1/(alpha - 1)) + 0.5);
         }
 
         //order if ordered = TRUE
