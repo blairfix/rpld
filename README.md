@@ -15,9 +15,9 @@ The `rpld` function takes the following inputs:
    * `n` = number of desired random numbers
    * `xmin` = minimum value of power the law distribution (integer > 0)
    * `alpha` = the power-law exponent of the distribution
-   * `discrete_max` = threshold after which the algorithm switches to the continuous approximation method (default = 10,000)
+   * `discrete_max` = threshold after which the algorithm switches to the continuous approximation method (`default = 10,000`)
    * `xmax` = an optional argument specifiying an upper cut off for the power law distribution (creates a truncated distribution)
-   * `ordered` = an option to specify if the desired output should be orderd from smallest to largest (default = FALSE)
+   * `ordered` = an option to specify if the desired output should be orderd from smallest to largest (`default = FALSE`)
 
 ### Output
 
