@@ -35,7 +35,7 @@ To run `rpld`, install the following R packages:
  * [Rcpp](https://cran.r-project.org/web/packages/Rcpp/index.html) 
  * [BH](https://cran.r-project.org/web/packages/BH/index.html) (Boost header library )
 
-Put the source code (`rpld.cpp`) in the directory of your R script. Then source it with the command `sourceCpp(rpld.cpp)`.
+Put the source code (`rpld.cpp`) in the directory of your R script. Then source it with the command `sourceCpp('rpld.cpp')`.
 
 ### Performance
 
